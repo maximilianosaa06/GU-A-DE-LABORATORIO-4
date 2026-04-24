@@ -1,4 +1,11 @@
-# Integrantes: Rodrigo Collao, Martín Eluney, Maximiliano Saavedra, José Barraza, Leandro Borquez
+# Integrantes:
+
+# Rodrigo Collao
+# Martín Eluney
+# Maximiliano Saavedra
+# José Barraza
+# Leandro Borquez
+
 # Técnica utilizada: Algoritmo del Panadero (Bakery Algorithm)
 
 import multiprocessing
