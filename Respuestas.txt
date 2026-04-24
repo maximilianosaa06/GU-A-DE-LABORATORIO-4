@@ -1,7 +1,1 @@
-# --- RESPUESTAS A LA GUÍA N°4 LABORATORIO ---
-# a) Sincronización: Coordinación de procesos para evitar competencia por recursos.
-# b) Semáforo: Variable entera usada para controlar el acceso a recursos mediante señales.
-# c) Mutex: Mecanismo de exclusión mutua para asegurar que solo un hilo acceda a un recurso.
-# d) Monitor: Estructura de alto nivel que encapsula datos y funciones con exclusión mutua implícita.
-# e) Variable condicional: Mecanismo para que los procesos esperen hasta que se cumpla una condición.
-# f) Conclusión Panadero: Es un método de software puro que no depende de hardware, a diferencia de los Locks.
+
