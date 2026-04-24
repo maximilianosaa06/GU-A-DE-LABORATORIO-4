@@ -89,11 +89,3 @@ if __name__ == "__main__":
     p2.start()
     p1.join()
     p2.join()
-
-# --- RESPUESTAS A LA GUÍA [cite: 27] ---
-# a) Sincronización: Coordinación de procesos para evitar competencia por recursos[cite: 13].
-# b) Semáforo: Variable entera usada para controlar el acceso a recursos mediante señales[cite: 16].
-# c) Mutex: Mecanismo de exclusión mutua para asegurar que solo un hilo acceda a un recurso[cite: 16].
-# d) Monitor: Estructura de alto nivel que encapsula datos y funciones con exclusión mutua implícita[cite: 16].
-# e) Variable condicional: Mecanismo para que los procesos esperen hasta que se cumpla una condición[cite: 16, 38].
-# f) Conclusión Panadero: Es un método de software puro que no depende de hardware, a diferencia de los Locks[cite: 39, 43].
