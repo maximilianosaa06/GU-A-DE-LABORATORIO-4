@@ -21,7 +21,7 @@ def lock_bakery(i):
 
     eligiendo[i] = True
 
-    numero[i] = max(numero) + 1
+    numero[i] = max(numero[:]) + 1
 
     eligiendo[i] = False
 
@@ -130,7 +130,7 @@ def procesador(id_proceso, archivo):
 
                     print(
                         f"[Procesador] "
-                        f"Factorial calculado de {n}"
+                        f"Factorial calculado de {n}: {factorial}"
                     )
 
                     procesados += 1
