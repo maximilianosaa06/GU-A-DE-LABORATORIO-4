@@ -1,12 +1,6 @@
-# Integrantes:
-
-# Rodrigo Collao
-# Martín Eluney
-# Maximiliano Saavedra
-# José Barraza
-# Leandro Borquez
-
-# Técnica utilizada: Algoritmo del Panadero (Bakery Algorithm)
+# Grupo: 2 | Técnica: Algoritmo del panadero
+# Integrantes: Rodrigo Collao, Martín Eluney, Maximiliano Saavedra, José Barraza, Leandro Borquez
+# Asignatura: Sistemas Operativos | Universidad La Serena
 
 import multiprocessing
 import time
