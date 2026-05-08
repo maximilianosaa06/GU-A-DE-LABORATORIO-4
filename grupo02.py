@@ -3,94 +3,182 @@
 # Asignatura: Sistemas Operativos | Universidad La Serena
 
 import multiprocessing
-import time
 import random
+import time
 import os
 
-# --- VARIABLES COMPARTIDAS (Estado del algoritmo) ---
-# Usamos Array de multiprocessing para que los procesos compartan estos datos
+# ---------------------------------
+# ALGORITMO DEL PANADERO
+# ---------------------------------
+
 MAX_PROCESOS = 2
-eligiendo = multiprocessing.Array('b', [False] * MAX_PROCESOS)  # boolean
-numero = multiprocessing.Array('i', [0] * MAX_PROCESOS)        # integer
+
+eligiendo = multiprocessing.Array('b', [False] * MAX_PROCESOS)
+numero = multiprocessing.Array('i', [0] * MAX_PROCESOS)
+
 
 def lock_bakery(i):
-    """Protocolo de entrada a la sección crítica"""
+
     eligiendo[i] = True
-    # El proceso toma un número mayor a los actuales
-    numero[i] = max(list(numero)) + 1
+
+    numero[i] = max(numero) + 1
+
     eligiendo[i] = False
-    
+
     for j in range(MAX_PROCESOS):
-        # Esperar si el proceso j está eligiendo un número
+
+        if j == i:
+            continue
+
         while eligiendo[j]:
             pass
-        # Esperar si el proceso j tiene un número menor o igual (prioridad por ID)
-        while (numero[j] != 0 and 
-               (numero[j] < numero[i] or (numero[j] == numero[i] and j < i))):
+
+        while (
+            numero[j] != 0 and
+            (
+                numero[j] < numero[i] or
+                (numero[j] == numero[i] and j < i)
+            )
+        ):
             pass
 
+
 def unlock_bakery(i):
-    """Protocolo de salida de la sección crítica"""
     numero[i] = 0
 
-# --- LÓGICA DEL PROGRAMA ---
+
+# ---------------------------------
+# FACTORIAL
+# ---------------------------------
 
 def calcular_factorial(n):
-    res = 1
+
+    resultado = 1
+
     for i in range(2, n + 1):
-        res *= i
-    return res
+        resultado *= i
+
+    return resultado
+
+
+# ---------------------------------
+# PROCESO GENERADOR
+# ---------------------------------
 
 def generador(id_proceso, archivo):
-    """Parte 1: Genera datos [cite: 21]"""
+
     for _ in range(5):
+
+        n = random.randint(1, 10)
+
         lock_bakery(id_proceso)
+
         try:
-            val = random.randint(1, 10)
+
             with open(archivo, "a") as f:
-                f.write(f"PROCESAR:{val}\n")
-            print(f"[Generador] Escribió: {val}")
+
+                # Escribe línea incompleta
+                f.write(f"El factorial de: {n} es:\n")
+
+            print(f"[Generador] Número generado: {n}")
+
         finally:
             unlock_bakery(id_proceso)
+
         time.sleep(1)
 
+
+# ---------------------------------
+# PROCESO PROCESADOR
+# ---------------------------------
+
 def procesador(id_proceso, archivo):
-    """Parte 2: Lee y escribe respuesta [cite: 21]"""
+
     procesados = 0
+
     while procesados < 5:
+
         lock_bakery(id_proceso)
+
         try:
-            if os.path.exists(archivo):
-                with open(archivo, "r") as f:
-                    lineas = f.readlines()
-                
+
+            if not os.path.exists(archivo):
+                continue
+
+            with open(archivo, "r") as f:
+                lineas = f.readlines()
+
+            modificado = False
+
+            for i in range(len(lineas)):
+
+                linea = lineas[i].strip()
+
+                # Buscar líneas incompletas
+                if linea.endswith("es:"):
+
+                    partes = linea.split()
+
+                    n = int(partes[3])
+
+                    factorial = calcular_factorial(n)
+
+                    # Completar línea
+                    lineas[i] = (
+                        f"El factorial de: {n} es: {factorial}\n"
+                    )
+
+                    print(
+                        f"[Procesador] "
+                        f"Factorial calculado de {n}"
+                    )
+
+                    procesados += 1
+                    modificado = True
+
+                    break
+
+            # Reescribir archivo actualizado
+            if modificado:
+
                 with open(archivo, "w") as f:
-                    encontrado = False
-                    for l in lineas:
-                        if l.startswith("PROCESAR:"):
-                            n = int(l.split(":")[1])
-                            f.write(f"El factorial de: {n} es {calcular_factorial(n)}\n")
-                            procesados += 1
-                            encontrado = True
-                        else:
-                            f.write(l)
+                    f.writelines(lineas)
+
         finally:
             unlock_bakery(id_proceso)
-        time.sleep(0.5 if not encontrado else 1.2)
+
+        time.sleep(0.5)
+
+
+# ---------------------------------
+# MAIN
+# ---------------------------------
 
 if __name__ == "__main__":
-    nombre_archivo = "resultados.txt"
-    if os.path.exists(nombre_archivo): os.remove(nombre_archivo)
 
-    # Crear procesos con sus respectivos IDs (0 y 1)
-    p1 = multiprocessing.Process(target=generador, args=(0, nombre_archivo))
-    p2 = multiprocessing.Process(target=procesador, args=(1, nombre_archivo))
+    archivo = "resultados.txt"
+
+    # Crear archivo automáticamente
+    with open(archivo, "w") as f:
+        pass
+
+    p1 = multiprocessing.Process(
+        target=generador,
+        args=(0, archivo)
+    )
+
+    p2 = multiprocessing.Process(
+        target=procesador,
+        args=(1, archivo)
+    )
 
     p1.start()
     p2.start()
+
     p1.join()
     p2.join()
 
+    print("\nPrograma terminado correctamente.")
 
 
 # --- RESPUESTAS A LA GUÍA N°4 LABORATORIO ---
