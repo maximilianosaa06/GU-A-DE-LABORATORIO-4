@@ -6,7 +6,7 @@ import random
 N_HILOS = 5
 contador_compartido = 0
 
-# Estructuras de datos del algoritmo
+# Estructuras de datos delvs algoritmo
 eligiendo = [False] * N_HILOS
 numero = [0] * N_HILOS
 
